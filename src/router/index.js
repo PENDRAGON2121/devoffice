@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import Login from '../views/Login.vue'
+import RegistrarUsuario from '../views/RegistrarUsuario.vue'
+import OfficeView from '../views/OfficeView.vue'
 
 const routes = [
   {
@@ -8,6 +11,27 @@ const routes = [
     component: HomeView
   },
   {
+    path: '/login',
+    name: 'login',
+    component: Login
+  },
+  {
+    path: '/home',
+    name: 'home',
+    component: HomeView
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: RegistrarUsuario
+  },
+  {
+    path: '/office/info/:id',
+    name: 'office',
+    component: OfficeView
+  },
+  {
+
     path: '/about',
     name: 'about',
     // route level code-splitting
