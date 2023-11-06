@@ -139,6 +139,7 @@ export default {
     },
     methods: {
 
+        // Interfaz: pide los datos al api del office en especifico
         getOffice() {
             axios.get(this.url).then(
                 res => {
@@ -152,6 +153,7 @@ export default {
                 }
             );
         },
+        // Pide los tags del office
         getTags() {
             axios.get(this.urlTag).then(
                 res => {
@@ -159,6 +161,7 @@ export default {
                 }
             );
         },
+        // Pide las reviews
         getReviews() {
             axios.get(this.urlReviews).then(
                 res => {
@@ -166,6 +169,8 @@ export default {
                 }
             );
         },
+
+        //Interfaz: envia al api las reviews
         postReview(){
             event.preventDefault();
             if(this.review.trim() === ''){
