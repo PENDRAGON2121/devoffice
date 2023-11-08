@@ -55,18 +55,38 @@
                             </div>
                             <!-- Contenido de reseñas -->
                             <div class="card-body">
-
                                 <div class="container">
                                     <div class="card mb-3" v-for="(reviews, index) in reviews" :key="index">
+                                        <!-- CAJON DE RESENAS -->
                                         <div class="card-header">
-
-                                            <h5 class="card-title">
-                                                <i class="fa-solid fa-message fa-beat"></i>
-                                                Anonimo
-                                            </h5>
+                                            <!-- Espacio del titulo de la reseña -->
+                                            <div class="d-flex justify-content-between">
+                                                <h5 class="card-title">
+                                                    <i class="fa-solid fa-message fa-beat"></i>
+                                                    Anonimo
+                                                </h5>
+                                                <h5 class="card-title">
+                                                    <i class="fa-solid fa-calendar-days"></i>
+                                                    {{ formatDate(reviews.created_at) }}
+                                                </h5>
+                                                <!-- Botones para editar y borrar -->
+                                                <h5 class="card-title" v-if="reviews.user_id === getCurrentUser()">
+                                                    <i class="fa-solid"
+                                                        :class="{ 'fa-pen-to-square': !reviews.isEditing, 'fa-save': reviews.isEditing }"
+                                                        @click="editReview(reviews)" style="cursor: pointer;"></i>
+                                                    <i class="fa-solid fa-trash mx-3" @click="deleteReview(reviews)"
+                                                        style="cursor: pointer;"></i>
+                                                </h5>
+                                            </div>
                                         </div>
+                                        <!-- CONRENIDO DE LA RESEÑA -->
                                         <div class="card-body">
-                                            <p class="card-text" > {{ reviews.review }}</p>
+                                            <p class="card-text" v-if="!reviews.isEditing">{{ reviews.review }}</p>
+                                            <div class="input-group mb-3" v-else>
+                                                <textarea class="form-control" v-model="reviews.review" rows="1"></textarea>
+                                                <button class="btn btn-success" type="button"
+                                                    @click="saveUpdatedReview(reviews)">Actualizar</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -82,12 +102,13 @@
                             <div class="card-body">
                                 <div class="card-body">
                                     <h5>Escriba su reseña:</h5>
-                                        <div class="input-group mb-3">
-                                            <textarea class="form-control" v-model="review" id="review" rows="1" ></textarea>
-                                            <button class="btn btn-success" type="button" v-on:click="postReview" id="button-addon3">Enviar</button>
-                                        </div>
+                                    <div class="input-group mb-3">
+                                        <textarea class="form-control" v-model="review" id="review" rows="1"></textarea>
+                                        <button class="btn btn-success" type="button" v-on:click="postReview"
+                                            id="button-addon3">Enviar</button>
                                     </div>
                                 </div>
+                            </div>
                         </div>
 
                     </div>
@@ -100,16 +121,20 @@
 </template>
 
 <script>
-import { mostrarAlerta, registrarReview } from '../funciones.js';
+import { mostrarAlerta, registrarReview , registrarActualizacionDeReview, confirmarEliminacionDeReview} from '../funciones.js';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
 export default {
     data() {
         return {
+            // variables para edicion de reviews
+            updatedRevewId: '',
+            isEditing: false,
+            updateTextForReview: '',
             // data imagen
             id: 0,
             name: '',
-            description: '', 
+            description: '',
             image: '',
             price: '',
             tags: '',
@@ -119,9 +144,10 @@ export default {
             urlTag: 'http://127.0.0.1:8000/api/office/tags',
             urlReviews: 'http://127.0.0.1:8000/api/office/reviews',
             urlReviewsPost: 'http://127.0.0.1:8000/api/reviews',
-            
+            urlUpdatedReviews: 'http://127.0.0.1:8000/api/reviews',
+
             //data de envio de review
-            userId:'',
+            userId: '',
             review: '',
 
             cargando: false
@@ -136,6 +162,7 @@ export default {
         this.getOffice();
         this.getTags();
         this.getReviews();
+        this.userId = JSON.parse(localStorage.getItem('usuario'));
     },
     methods: {
 
@@ -143,7 +170,6 @@ export default {
         getOffice() {
             axios.get(this.url).then(
                 res => {
-                    console.log(res.data);
                     this.name = res.data.name;
                     this.apellido = res.data.apellido;
                     this.description = res.data.description;
@@ -163,6 +189,9 @@ export default {
         },
         // Pide las reviews
         getReviews() {
+
+
+
             axios.get(this.urlReviews).then(
                 res => {
                     this.reviews = res.data;
@@ -171,23 +200,63 @@ export default {
         },
 
         //Interfaz: envia al api las reviews
-        postReview(){
+        postReview() {
             event.preventDefault();
-            if(this.review.trim() === ''){
+            if (this.review.trim() === '') {
                 mostrarAlerta('Debe escribir una reseña', 'warning', 'review');
-            }else{
+            } else {
+                // user = JSON.parse(localStorage.getItem('usuario'));
                 const user = JSON.parse(localStorage.getItem('usuario'));
                 this.userId = user.id;
                 var datos = {
-
                     review: this.review,
                     office_id: this.id,
                     user_id: this.userId
                 }
-                registrarReview(datos, this.urlReviewsPost ,"Reseña Agregada");
+                registrarReview(datos, this.urlReviewsPost, "Reseña Agregada");
 
             }
         },
+        formatDate(dateString) {
+            let date = new Date(dateString);
+            let year = date.getFullYear();
+            let month = ('0' + (date.getMonth() + 1)).slice(-2); // los meses empiezan desde 0 en JavaScript
+            let day = ('0' + date.getDate()).slice(-2);
+            return `${day}-${month}-${year}`;
+        },
+        getCurrentUser() {
+            const user = JSON.parse(localStorage.getItem('usuario'));
+            if (user != null) {
+                return user.id
+            }
+            return null
+        },
+        // Método para habilitar la edición de una reseña
+        editReview(review) {
+            // Establece 'isEditing' en true para la reseña específica
+            review.isEditing = !review.isEditing;
+
+        },
+        saveUpdatedReview(review) {
+            // enviar id junto a la url
+            const url = `${this.urlUpdatedReviews}/${review.id}`;
+            const updatedReview = {
+                review: review.review
+            };
+            // console.log(url);
+            // console.log(updatedReview);
+
+            registrarActualizacionDeReview(updatedReview,url,'Reseña Actualizada');
+
+           
+        },
+        deleteReview(review){
+
+            const url = `${this.urlUpdatedReviews}/${review.id}`;
+            confirmarEliminacionDeReview(url,'Eliminacion De Review','¿Esta seguro de la accion?');
+        }
+
+
 
     }
 }

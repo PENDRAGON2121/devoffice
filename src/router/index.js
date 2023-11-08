@@ -7,8 +7,8 @@ import OfficeView from '../views/OfficeView.vue'
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: HomeView
+    name: 'login',
+    component: Login
   },
   {
     path: '/login',

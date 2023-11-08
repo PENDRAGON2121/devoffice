@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid mt-5">
+  <div class="container-fluid mt-5 mb-5">
     <img src="@/assets/Workaway.png" class="img-fluid" alt="...">
   </div>
 
