@@ -3,6 +3,8 @@ import HomeView from '../views/HomeView.vue'
 import Login from '../views/Login.vue'
 import RegistrarUsuario from '../views/RegistrarUsuario.vue'
 import OfficeView from '../views/OfficeView.vue'
+import ReservationView from '../views/ReservationView.vue'
+
 
 const routes = [
   {
@@ -29,6 +31,11 @@ const routes = [
     path: '/office/info/:id',
     name: 'office',
     component: OfficeView
+  },
+  {
+    path: '/reservation/:id',
+    name: 'Reservation',
+    component: ReservationView
   },
   {
 

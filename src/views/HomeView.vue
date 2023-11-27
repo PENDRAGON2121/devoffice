@@ -21,8 +21,8 @@
                   </small>
                 </div>
                 <div class="col col-4 ">
-                  <!-- <button class="btn btn-primary" @click="showOffice(office.id)">Reservar</button> -->
-                  <router-link class="btn btn-primary " :to="{path: '/office/info/' + office.id}">Reservar</router-link>
+                 <!-- <button class="btn btn-primary" @click="showOffice(office.id)">Reservar</button> -->
+                  <router-link class="btn btn-primary " :to="{path: '/office/info/' + office.id}">Información</router-link>
                 </div>
               </div>
             </div>

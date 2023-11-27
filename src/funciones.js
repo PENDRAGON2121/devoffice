@@ -216,3 +216,57 @@ export function confirmarEliminacionDeReview(urlConSlash, titulo, mensaje) {
 
 
 }
+
+export function registrarReservation(parametros, url, mensaje) {
+    axios({
+        method: 'post',
+        url: url,
+        data: parametros
+    })
+        .then(function (resp) {
+            var estado = resp.status;
+            var respuesta = resp.data;
+
+            console.log(respuesta);
+
+            if (estado == 200 || estado == 201) {
+                mostrarAlerta(mensaje, 'success');
+                window.setTimeout(function () {
+                    window.location.href = '/home';
+                }, 1000);
+          
+            } else {
+                mostrarAlerta('No se pudo finalizar la operación', 'error');
+
+            }
+        }).catch(function (error) {
+            mostrarAlerta('Servidor no disponible', 'error');
+        });
+}
+export function registrarActualizacionDeReservation(parametros, url, mensaje) {
+    axios({
+        method: 'put',
+        url: url,
+        data: parametros
+    })
+        .then(function (resp) {
+            var estado = resp.status;
+            var respuesta = resp.data;
+
+            console.log(respuesta);
+
+            if (estado == 200 || estado == 201) {
+                mostrarAlerta(mensaje, 'success');
+                
+
+                window.setTimeout(function () {
+                    location.reload();
+                }, 1000);
+            } else {
+                mostrarAlerta('No se pudo finalizar la operación', 'error');
+
+            }
+        }).catch(function (error) {
+            mostrarAlerta('Servidor no disponible', 'error');
+        });
+}
