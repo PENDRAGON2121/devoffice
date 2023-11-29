@@ -270,3 +270,5 @@ export function registrarActualizacionDeReservation(parametros, url, mensaje) {
             mostrarAlerta('Servidor no disponible', 'error');
         });
 }
+
+

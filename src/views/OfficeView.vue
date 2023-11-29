@@ -36,7 +36,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <a href="#" class="btn btn-primary btn-lg">Reservar</a>
+                                <router-link class="btn btn-primary " :to="{path: '/reservation/' + this.id}">Reservar</router-link>
                                 <!-- TODO: cheking y checkout -->
                             </div>
                         </div>
@@ -54,7 +54,7 @@
                                 RESEÑAS
                             </div>
                             <!-- Contenido de reseñas -->
-                            <div class="card-body">
+                            <div class="card-body" style="max-height: 400px; overflow-y: auto;">
                                 <div class="container">
                                     <div class="card mb-3" v-for="(reviews, index) in reviews" :key="index">
                                         <!-- CAJON DE RESENAS -->
